@@ -19,8 +19,7 @@ import fr.insee.sugoi.core.realm.RealmProvider;
 import fr.insee.sugoi.core.service.UserService;
 import fr.insee.sugoi.core.store.StoreProvider;
 import fr.insee.sugoi.model.User;
-import fr.insee.sugoi.model.UserStorage;
-import fr.insee.sugoi.model.Realm;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,19 +31,48 @@ public class UserServiceImpl implements UserService {
 
   @Autowired private RealmProvider realmProvider;
 
-  public User searchUser(String domaine, String id) {
+  @Override
+  public User create(String realm, User user, String storage) {
+    return storeProvider.getStoreForUserStorage(realm, storage).getWriter().createUser(user);
+  }
+
+  @Override
+  public User create(String realm, User user) {
+    return create(realm, user, realmProvider.load(realm).getDefaultUserStorageName());
+  }
+
+  @Override
+  public void update(String realm, User user, String storage) {
+    storeProvider.getStoreForUserStorage(realm, storage).getWriter().updateUser(user);
+  }
+
+  @Override
+  public void update(String realm, User user) {
+    update(realm, user, realmProvider.load(realm).getDefaultUserStorageName());
+  }
+
+  @Override
+  public void delete(String realmName, String id, String storage) {
+    storeProvider.getStoreForUserStorage(realmName, storage).getWriter().deleteUser(id);
+  }
+
+  @Override
+  public void delete(String realmName, String id) {
+    delete(realmName, id, realmProvider.load(realmName).getDefaultUserStorageName());
+  }
+
+  @Override
+  public User findById(String realmName, String id, String storage) {
     try {
-      Realm realm = realmProvider.load(domaine);
-      UserStorage userStorage = realm.getUserStorages().get(0);
-      User user =
-          storeProvider
-              .getStoreForUserStorage(realm.getName(), userStorage.getName())
-              .getReader()
-              .getUser(id);
-      return user;
+      return storeProvider.getStoreForUserStorage(realmName, storage).getReader().getUser(id);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public User findById(String realmName, String id) {
+    return findById(realmName, id, realmProvider.load(realmName).getDefaultUserStorageName());
   }
 
   @Override
@@ -61,19 +89,22 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User create(String realm, String storage, User user) {
-    // TODO Auto-generated method stub
-    return null;
+  public PageResult<User> findByProperties(
+      String realm, Map<String, String> properties, PageableResult pageable) {
+    return findByProperties(
+        realm, properties, pageable, realmProvider.load(realm).getDefaultUserStorageName());
   }
 
   @Override
-  public User delete(String domaine, String id) {
-    Realm realm = realmProvider.load(domaine);
-    UserStorage userStorage = realm.getUserStorages().get(0);
-    storeProvider
-        .getStoreForUserStorage(realm.getName(), userStorage.getName())
-        .getWriter()
-        .deleteUser(id);
-    return null;
+  public PageResult<User> findAll(String realm, String storage) {
+    return storeProvider
+        .getStoreForUserStorage(realm, storage)
+        .getReader()
+        .searchUsers(new HashMap<>(), new PageableResult(), "");
+  }
+
+  @Override
+  public PageResult<User> findAll(String realm) {
+    return findAll(realm, realmProvider.load(realm).getDefaultUserStorageName());
   }
 }

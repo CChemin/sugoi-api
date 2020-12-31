@@ -19,7 +19,6 @@ import fr.insee.sugoi.core.realm.RealmProvider;
 import fr.insee.sugoi.core.service.OrganizationService;
 import fr.insee.sugoi.core.store.StoreProvider;
 import fr.insee.sugoi.model.Organization;
-import fr.insee.sugoi.model.UserStorage;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,43 +31,76 @@ public class OrganizationServiceImpl implements OrganizationService {
 
   @Autowired private StoreProvider storeProvider;
 
-  public Organization create(String realm, String storage, Organization organization) {
-    UserStorage userStorage = realmProvider.load(realm).getUserStorages().get(0);
+  @Override
+  public Organization create(String realm, Organization organization, String storageName) {
     return storeProvider
-        .getStoreForUserStorage(realm, userStorage.getName())
+        .getStoreForUserStorage(realm, storageName)
         .getWriter()
         .createOrganization(organization);
   }
 
   @Override
+  public Organization create(String realm, Organization organization) {
+    return create(realm, organization, realmProvider.load(realm).getDefaultUserStorageName());
+  }
+
+  @Override
+  public void delete(String realm, String id, String storageName) {
+    storeProvider.getStoreForUserStorage(realm, storageName).getWriter().deleteOrganization(id);
+  }
+
+  @Override
   public void delete(String realm, String id) {
-    UserStorage userStorage = realmProvider.load(realm).getUserStorages().get(0);
-    storeProvider
-        .getStoreForUserStorage(realm, userStorage.getName())
-        .getWriter()
-        .deleteOrganization(id);
+    delete(realm, id, realmProvider.load(realm).getDefaultUserStorageName());
   }
 
   @Override
-  public PageResult<Organization> search(
-      String realm, String application, String role, String property) {
-    UserStorage userStorage = realmProvider.load(realm).getUserStorages().get(0);
-    PageableResult pageableResult = new PageableResult();
-    Map<String, String> properties = new HashMap<>();
-    properties.put("application", application);
-    properties.put("role", role);
-    properties.put("property", property);
+  public void update(String realm, Organization organization) {
+    update(realm, organization, realmProvider.load(realm).getDefaultUserStorageName());
+  }
+
+  @Override
+  public Organization findById(String realm, String id, String storage) {
+    return storeProvider.getStoreForUserStorage(realm, storage).getReader().getOrganization(id);
+  }
+
+  @Override
+  public Organization findById(String realm, String id) {
+    return findById(realm, id, realmProvider.load(realm).getDefaultUserStorageName());
+  }
+
+  @Override
+  public PageResult<Organization> findByProperties(
+      String realm, Map<String, String> properties, String storageName) {
     return storeProvider
-        .getStoreForUserStorage(realm, userStorage.getName())
+        .getStoreForUserStorage(realm, storageName)
         .getReader()
-        .searchOrganizations(properties, pageableResult, "AND");
+        .searchOrganizations(properties, new PageableResult(), "AND");
   }
 
   @Override
-  public void update(String realm, String storage, String id, Organization organization) {
-    UserStorage userStorage = realmProvider.load(realm).getUserStorages().get(0);
+  public PageResult<Organization> findByProperties(String realm, Map<String, String> properties) {
+    return findByProperties(
+        realm, properties, realmProvider.load(realm).getDefaultUserStorageName());
+  }
+
+  @Override
+  public PageResult<Organization> findAll(String realm, String storageName) {
+    return storeProvider
+        .getStoreForUserStorage(realm, storageName)
+        .getReader()
+        .searchOrganizations(new HashMap<>(), new PageableResult(), "AND");
+  }
+
+  @Override
+  public PageResult<Organization> findAll(String realm) {
+    return findAll(realm, realmProvider.load(realm).getDefaultUserStorageName());
+  }
+
+  @Override
+  public void update(String realm, Organization organization, String storageName) {
     storeProvider
-        .getStoreForUserStorage(realm, userStorage.getName())
+        .getStoreForUserStorage(realm, storageName)
         .getWriter()
         .updateOrganization(organization);
   }

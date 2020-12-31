@@ -13,11 +13,15 @@
 */
 package fr.insee.sugoi.services.controller;
 
+import fr.insee.sugoi.core.model.PageResult;
+import fr.insee.sugoi.core.model.PageableResult;
 import fr.insee.sugoi.core.service.UserService;
 import fr.insee.sugoi.model.User;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,6 +47,7 @@ public class UserController {
 
   @GetMapping(
       path = {"/{realm}/Users", "/{realm}/{storage}/Users"},
+      params = {"size", "offset"},
       produces = {MediaType.APPLICATION_JSON_VALUE})
   @PreAuthorize("@NewAuthorizeMethodDecider.isAtLeastReader(#realm,#storage)")
   public ResponseEntity<?> getUsers(
@@ -53,15 +58,26 @@ public class UserController {
       @RequestParam(name = "description", required = false) String description,
       @RequestParam(name = "organisationId", required = false) String organisationId,
       @RequestParam(name = "size", defaultValue = "20") int size,
-      @RequestParam(name = "start", required = false, defaultValue = "0") int offset,
+      @RequestParam(name = "offset", required = false, defaultValue = "0") int offset,
       @RequestParam(name = "searchCookie", required = false) String searchCookie,
       @RequestParam(name = "typeRecherche", defaultValue = "et", required = true)
           String typeRecherche,
       @RequestParam(name = "habilitation", required = false) List<String> habilitations,
       @RequestParam(name = "application", required = false) String application) {
-    // TODO: process GET request
-
-    return null;
+    PageableResult pageable = new PageableResult();
+    pageable.setSize(size);
+    if (searchCookie != null) {
+      pageable.setCookie(searchCookie.getBytes());
+    }
+    pageable.setFirst(offset);
+    Map<String, String> properties = new HashMap<>();
+    properties.put("identifiant", identifiant);
+    properties.put("nomCommun", nomCommun);
+    properties.put("description", description);
+    properties.put("organisationId", organisationId);
+    properties.put("application", application);
+    PageResult<User> result = userService.findByProperties(realm, properties, pageable);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
   @PostMapping(
@@ -75,7 +91,7 @@ public class UserController {
       @RequestBody User user) {
     User createdUser;
     try {
-      createdUser = userService.create(realm, storage, user);
+      createdUser = userService.create(realm, user, storage);
       return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     } catch (Exception e) {
       return ResponseEntity.status(500).build();
@@ -105,10 +121,9 @@ public class UserController {
       @PathVariable("storage") String storage,
       @PathVariable("id") String id) {
     // TODO: process DELETE request
-    User deletedUser;
     try {
-      deletedUser = userService.delete(realm, id);
-      return ResponseEntity.status(HttpStatus.CREATED).body(deletedUser);
+      userService.delete(realm, id);
+      return ResponseEntity.status(HttpStatus.OK).build();
     } catch (Exception e) {
       return ResponseEntity.status(500).build();
     }

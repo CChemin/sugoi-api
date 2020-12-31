@@ -15,14 +15,32 @@ package fr.insee.sugoi.core.service;
 
 import fr.insee.sugoi.core.model.PageResult;
 import fr.insee.sugoi.model.Organization;
+import java.util.Map;
 
 public interface OrganizationService {
 
-  Organization create(String realm, String storage, Organization organization);
+  Organization create(String realm, Organization organization);
+
+  Organization create(String realm, Organization organization, String storage);
+
+  void update(String realm, Organization organization);
 
   void delete(String realm, String id);
 
-  PageResult<Organization> search(String realm, String application, String role, String property);
+  void delete(String realm, String id, String storage);
 
-  void update(String realm, String storage, String id, Organization organization);
+  Organization findById(String realm, String id);
+
+  Organization findById(String realm, String id, String storage);
+
+  PageResult<Organization> findByProperties(String realm, Map<String, String> properties);
+
+  PageResult<Organization> findByProperties(
+      String realm, Map<String, String> properties, String storage);
+
+  PageResult<Organization> findAll(String realm);
+
+  PageResult<Organization> findAll(String realm, String Storage);
+
+  void update(String realm, Organization organization, String storage);
 }

@@ -20,12 +20,29 @@ import java.util.Map;
 
 public interface UserService {
 
-  User searchUser(String domaine, String idep);
+  User create(String realm, User user);
+
+  User create(String realm, User user, String storage);
+
+  void update(String realm, User user);
+
+  void update(String realm, User user, String storage);
+
+  void delete(String realm, String id);
+
+  void delete(String realm, String id, String storage);
+
+  User findById(String domaine, String idep);
+
+  User findById(String domaine, String idep, String storageName);
 
   PageResult<User> findByProperties(
       String realm, Map<String, String> properties, PageableResult pageable, String storageName);
 
-  User create(String realm, String storage, User user);
+  PageResult<User> findByProperties(
+      String realm, Map<String, String> properties, PageableResult pageable);
 
-  User delete(String realm, String id);
+  PageResult<User> findAll(String realm);
+
+  PageResult<User> findAll(String realm, String Storage);
 }

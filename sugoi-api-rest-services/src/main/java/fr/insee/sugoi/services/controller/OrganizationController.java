@@ -19,6 +19,8 @@ import fr.insee.sugoi.model.Organization;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,8 +56,12 @@ public class OrganizationController {
       @RequestParam(value = "role", required = false) String role,
       @RequestParam(value = "property", required = false) String property) {
     try {
+      Map<String, String> properties = new HashMap<>();
+      properties.put("application", application);
+      properties.put("role", role);
+      properties.put("property", property);
       PageResult<Organization> organizations =
-          organizationService.search(realm, application, role, property);
+          organizationService.findByProperties(realm, properties);
       return ResponseEntity.status(HttpStatus.OK).body(organizations);
     } catch (Exception e) {
       return ResponseEntity.status(500).build();
@@ -73,7 +79,7 @@ public class OrganizationController {
       @PathVariable("storage") String storage,
       @RequestBody Organization organization) {
     try {
-      organizationService.create(realm, storage, organization);
+      organizationService.create(realm, organization, storage);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body(organization);
     } catch (Exception e) {
       return ResponseEntity.status(500).build();
@@ -92,7 +98,7 @@ public class OrganizationController {
       @PathVariable("id") String id,
       @RequestBody Organization organization) {
     try {
-      organizationService.update(realm, storage, id, organization);
+      organizationService.update(realm, organization, storage);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body(organization);
     } catch (Exception e) {
       return ResponseEntity.status(500).build();
