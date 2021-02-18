@@ -1,0 +1,229 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>ldap-services</artifactId>
+		<groupId>fr.insee.ctsc.ldap</groupId>
+		<version>dev</version>
+	</parent>
+	<artifactId>ldap-services-rest-it</artifactId>
+	<description>Test d'intégration pour les services LDAP</description>
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<!-- Autres modules (les war pour s'assurer que rest-it passe en dernier) -->
+		<dependency>
+			<groupId>fr.insee.sugoi</groupId>
+			<artifactId>sugoi-api-converter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>fr.insee.ctsc.ldap</groupId>
+			<artifactId>ldap-services-client-util</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>fr.insee.ctsc.ldap</groupId>
+			<artifactId>ldap-services-rest-ihm</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>fr.insee.ctsc.ldap</groupId>
+			<artifactId>ldap-services-ihm</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>fr.insee.ctsc.ldap</groupId>
+			<artifactId>ldap-services-batch</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Autres -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.tomakehurst</groupId>
+			<artifactId>wiremock-standalone</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<scope>test</scope>
+		</dependency>
+				
+	    <dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-jaxb</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.unboundid</groupId>
+			<artifactId>unboundid-ldapsdk</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-catalina</artifactId>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-coyote</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jasper</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-juli</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+		</dependency>
+		<dependency>
+ 			<groupId>com.sun.activation</groupId>
+  			<artifactId>javax.activation</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<!-- doc maven : Warning: Do not filter files with binary content like 
+						images! This will most likely result in corrupt output. -->
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>p12</nonFilteredFileExtension>
+						<nonFilteredFileExtension>jks</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<id>generate-version</id>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Skip des test unitaires -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+
+			<!-- Tests d'intégration -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<systemPropertyVariables>
+					</systemPropertyVariables>
+					<skip>${maven.test.skip}</skip>
+					<skipITs>${maven.test.skip}</skipITs>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>fr.insee.ctsc.ldap.LdapServiceTestServer</mainClass>
+					<classpathScope>compile</classpathScope>
+					<arguments></arguments>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start-local-server</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<cleanupDaemonThreads>false</cleanupDaemonThreads>
+							<systemProperties>
+								<systemProperty>
+									<key>VERSION</key>
+									<value>${project.version}</value>
+								</systemProperty>
+							</systemProperties>
+							<arguments>
+								<argument>start</argument>
+
+								<argument>fork</argument>
+							</arguments>
+							<skip>${maven.test.skip}</skip>
+						</configuration>
+					</execution>
+					<execution>
+						<id>stop-local-server</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<arguments>
+								<argument>stop</argument>
+							</arguments>
+							<skip>${maven.test.skip}</skip>
+
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+	</build>
+</project>

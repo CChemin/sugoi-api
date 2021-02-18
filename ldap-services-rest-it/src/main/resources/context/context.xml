@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context preemptiveAuthentication="true">
+    <Loader delegate="true"/>
+
+	<Realm className="org.apache.catalina.realm.JNDIRealm"
+		allRolesMode="authOnly"
+	   	connectionURL="ldap://localhost:10389" 
+	   	userBase="ou=applications,o=insee,c=fr"
+		userSearch="(uid=appli_{0})" 
+		userSubtree="true" 
+		roleBase="ou=Applications,o=insee,c=fr"
+		roleSubtree="true" 
+		roleName="cn" 
+		roleSearch="(uniquemember={0})" />
+</Context>

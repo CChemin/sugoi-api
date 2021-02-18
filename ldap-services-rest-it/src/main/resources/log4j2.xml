@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%highlight{%d{dd MMM yyyy HH:mm:ss} %-5level %logger{1.} - %MDC{RemoteUser} - %MDC{RemoteIp} - %msg%n}"
+				disableAnsi="false" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="fr.insee.ctsc.ldap" level="trace" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Root level="warn">
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration>
