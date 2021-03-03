@@ -22,7 +22,7 @@ import java.util.List;
 
 @JacksonXmlRootElement(localName = "ListeCompte", namespace = Namespace.ANNUAIRE)
 @JsonPropertyOrder({"liste"})
-public class Contacts {
+public class Contacts implements Entites<Contact>{
 
   @JacksonXmlProperty(localName = "Contact", namespace = Namespace.ANNUAIRE)
   @JacksonXmlElementWrapper(useWrapping = false)

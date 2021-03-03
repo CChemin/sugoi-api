@@ -2,9 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>ldap-services</artifactId>
-		<groupId>fr.insee.ctsc.ldap</groupId>
-		<version>dev</version>
+		<groupId>fr.insee.sugoi</groupId>
+		<artifactId>sugoi-api-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>ldap-services-rest-it</artifactId>
 	<description>Test d'intégration pour les services LDAP</description>
@@ -19,30 +20,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>fr.insee.ctsc.ldap</groupId>
+			<groupId>fr.insee.sugoi</groupId>
 			<artifactId>ldap-services-client-util</artifactId>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>fr.insee.ctsc.ldap</groupId>
-			<artifactId>ldap-services-rest-ihm</artifactId>
 			<version>${project.version}</version>
-			<type>war</type>
-		</dependency>
-
-		<dependency>
-			<groupId>fr.insee.ctsc.ldap</groupId>
-			<artifactId>ldap-services-ihm</artifactId>
-			<version>${project.version}</version>
-			<type>war</type>
-		</dependency>
-
-		<dependency>
-			<groupId>fr.insee.ctsc.ldap</groupId>
-			<artifactId>ldap-services-batch</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<!-- Autres -->
@@ -115,14 +96,34 @@
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-core</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 		<dependency>
  			<groupId>com.sun.activation</groupId>
   			<artifactId>javax.activation</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.6.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.6.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.9</version>
 		</dependency>
 	</dependencies>
 
@@ -180,7 +181,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>fr.insee.ctsc.ldap.LdapServiceTestServer</mainClass>
+					<mainClass>fr.insee.sugoi.ldap.LdapServiceTestServer</mainClass>
 					<classpathScope>compile</classpathScope>
 					<arguments></arguments>
 				</configuration>

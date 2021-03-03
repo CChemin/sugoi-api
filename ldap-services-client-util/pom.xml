@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>fr.insee.sugoi</groupId>
+		<artifactId>sugoi-api-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>ldap-services-client-util</artifactId>
+	<packaging>jar</packaging>
+	<name>Services utiles client</name>
+	<description>Services côté client dans la manipulation du web service</description>
+
+	<dependencies>
+
+		<!-- Dépendances aux autres modules -->
+		<dependency>
+			<groupId>fr.insee.sugoi</groupId>
+			<artifactId>sugoi-api-converter</artifactId>
+		</dependency>
+
+		<!-- Autres -->
+
+		<!-- Jersey 2 : client + hk2 obligatoire pour que les requetes aboutissent 
+			(java.lang.IllegalStateException: InjectionManagerFactory not found) et jackson 
+			pour pouvoir lire les body en json -->
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.6.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.6.0</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+</project>

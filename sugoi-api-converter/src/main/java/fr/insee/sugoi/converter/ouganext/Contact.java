@@ -36,7 +36,9 @@ import java.util.HashSet;
 /**
  * Java class for ContactType complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  *
  * <pre>
  * &lt;complexType name="ContactType">
@@ -78,41 +80,14 @@ import java.util.HashSet;
  * </pre>
  */
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({
-  "identifiant",
-  "nomCommun",
-  "nom",
-  "prenom",
-  "domaineDeGestion",
-  "description",
-  "civilite",
-  "identifiantMetier",
-  "adresseMessagerie",
-  "numeroTelephone",
-  "telephonePortable",
-  "facSimile",
-  "hasPassword",
-  "certificate",
-  "adresse",
-  "organisationDeRattachementUri",
-  "organisation",
-  "repertoireDeDistribution",
-  "propriete",
-  "inseeRoleApplicatif",
-  "codePin",
-  "dateCreation",
-  "inseeTimbre",
-  "inseeOrganisme",
-  "inseeAdresseCorrespondantLigne1",
-  "inseeAdresseCorrespondantLigne2",
-  "inseeAdresseCorrespondantLigne3",
-  "postalCode",
-  "inseeNomCorrespondant",
-  "inseeMailCorrespondant",
-  "inseeTelephoneNumberCorrespondant"
-})
+@JsonPropertyOrder({ "identifiant", "nomCommun", "nom", "prenom", "domaineDeGestion", "description", "civilite",
+    "identifiantMetier", "adresseMessagerie", "numeroTelephone", "telephonePortable", "facSimile", "hasPassword",
+    "certificate", "adresse", "organisationDeRattachementUri", "organisation", "repertoireDeDistribution", "propriete",
+    "inseeRoleApplicatif", "codePin", "dateCreation", "inseeTimbre", "inseeOrganisme",
+    "inseeAdresseCorrespondantLigne1", "inseeAdresseCorrespondantLigne2", "inseeAdresseCorrespondantLigne3",
+    "postalCode", "inseeNomCorrespondant", "inseeMailCorrespondant", "inseeTelephoneNumberCorrespondant" })
 @JacksonXmlRootElement(localName = "Contact", namespace = Namespace.ANNUAIRE)
-public class Contact {
+public class Contact implements Entite {
 
   @JacksonXmlProperty(localName = "Identifiant", namespace = Namespace.ANNUAIRE)
   @MapFromAttribute(attributeName = "username")
@@ -483,5 +458,15 @@ public class Contact {
 
   public void setPostalCode(String postalCode) {
     this.postalCode = postalCode;
+  }
+
+  @Override
+  public Adresse getAdressePostale() {
+    return this.adresse;
+  }
+
+  @Override
+  public void setAdressePostale(Adresse adresse) {
+    this.adresse = adresse;
   }
 }

@@ -30,7 +30,9 @@ import java.util.HashSet;
 /**
  * Java class for OrganisationType complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  *
  * <pre>
  * &lt;complexType name="OrganisationType">
@@ -54,22 +56,11 @@ import java.util.HashSet;
  * </pre>
  */
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({
-  "identifiant",
-  "nomCommun",
-  "domaineDeGestion",
-  "description",
-  "adresseMessagerie",
-  "numeroTelephone",
-  "facSimile",
-  "adresse",
-  "cleDeChiffrement",
-  "organisationDeRattachement",
-  "repertoireDeDistribution",
-  "propriete"
-})
+@JsonPropertyOrder({ "identifiant", "nomCommun", "domaineDeGestion", "description", "adresseMessagerie",
+    "numeroTelephone", "facSimile", "adresse", "cleDeChiffrement", "organisationDeRattachement",
+    "repertoireDeDistribution", "propriete" })
 @JacksonXmlRootElement(localName = "Organisation", namespace = Namespace.ANNUAIRE)
-public class Organisation {
+public class Organisation implements Entite {
 
   @JacksonXmlProperty(localName = "Identifiant", namespace = Namespace.ANNUAIRE)
   @MapFromAttribute(attributeName = "identifiant")
@@ -216,30 +207,22 @@ public class Organisation {
   }
 
   public String toString() {
-    return "Organisation [nomCommun="
-        + nomCommun
-        + ", domaineDeGestion="
-        + domaineDeGestion
-        + ", description="
-        + description
-        + ", adresseMessagerie="
-        + adresseMessagerie
-        + ", numeroTelephone="
-        + numeroTelephone
-        + ", facSimile="
-        + facSimile
-        + ", adresse="
-        + adresse
-        + ", cleDeChiffrement="
-        + Arrays.toString(cleDeChiffrement)
-        + ", organisationDeRattachement="
+    return "Organisation [nomCommun=" + nomCommun + ", domaineDeGestion=" + domaineDeGestion + ", description="
+        + description + ", adresseMessagerie=" + adresseMessagerie + ", numeroTelephone=" + numeroTelephone
+        + ", facSimile=" + facSimile + ", adresse=" + adresse + ", cleDeChiffrement="
+        + Arrays.toString(cleDeChiffrement) + ", organisationDeRattachement="
         + ((organisationDeRattachement == null) ? "" : organisationDeRattachement.getIdentifiant())
-        + ", repertoireDeDistribution="
-        + repertoireDeDistribution
-        + ", identifiant="
-        + identifiant
-        + ", propriete="
-        + propriete
-        + "]";
+        + ", repertoireDeDistribution=" + repertoireDeDistribution + ", identifiant=" + identifiant + ", propriete="
+        + propriete + "]";
+  }
+
+  @Override
+  public Adresse getAdressePostale() {
+    return this.adresse;
+  }
+
+  @Override
+  public void setAdressePostale(Adresse adresse) {
+    this.adresse = adresse;
   }
 }

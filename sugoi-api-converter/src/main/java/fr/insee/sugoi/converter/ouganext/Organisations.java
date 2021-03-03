@@ -21,7 +21,7 @@ import java.util.List;
 
 @JacksonXmlRootElement(localName = "ListeOrganisations", namespace = Namespace.ANNUAIRE)
 @JsonPropertyOrder({"liste"})
-public class Organisations {
+public class Organisations implements Entites<Organisation>{
 
   @JacksonXmlProperty(localName = "Organisation", namespace = Namespace.ANNUAIRE)
   protected List<Organisation> liste = new ArrayList<Organisation>();
