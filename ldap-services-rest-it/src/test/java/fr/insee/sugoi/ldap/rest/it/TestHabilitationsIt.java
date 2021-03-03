@@ -19,8 +19,8 @@ public class TestHabilitationsIt extends InitTests {
 
   @Test
   public void testGetHabs() {
-    WebTarget ressource = targets.get("contact");
-    Response response = ressource.path("/testc/habilitations").request().get();
+    WebTarget ressource = targets.get("contact-domaine1");
+    Response response = ressource.path("/testc/habilitations").request(MediaType.APPLICATION_JSON).get();
     response.readEntity(Habilitations.class);
 
     assertEquals(Status.OK.getStatusCode(), response.getStatus());
@@ -28,48 +28,48 @@ public class TestHabilitationsIt extends InitTests {
 
   @Test
   public void testGetHabsVideXml() {
-    WebTarget ressource = targets.get("contacts");
+    WebTarget ressource = targets.get("contacts-domaine1");
     Contact contactTest = new Contact();
     contactTest.setNomCommun("Test IT");
-    Response response = ressource.queryParam("domaine", "domaine1").queryParam("nomCommun", "Test")
+    Response response = ressource.queryParam("nomCommun", "Test")
         .request().post(Entity.entity(contactTest, MediaType.APPLICATION_JSON));
     assertEquals(201, response.getStatus());
     WebTarget ressource2 =
-        targets.get("contact").path(getIdentifiantFromLink(response.getHeaderString("Link")));
+        targets.get("contact-domaine1").path(getIdentifiantFromLink(response.getHeaderString("Link")));
     contactsTemps.add(ressource2);
-    Response response2 = ressource2.path("/habilitations").request().get();
+    Response response2 = ressource2.path("/habilitations").request(MediaType.APPLICATION_JSON).get();
     response2.readEntity(Habilitations.class);
     assertEquals(Status.OK.getStatusCode(), response2.getStatus());
   }
 
   @Test
   public void testGetHabsVideJson() {
-    WebTarget ressource = targets.get("contacts");
+    WebTarget ressource = targets.get("contacts-domaine1");
     Contact contactTest = new Contact();
     contactTest.setNomCommun("Test IT");
-    Response response = ressource.queryParam("domaine", "domaine1").queryParam("nomCommun", "Test")
+    Response response = ressource.queryParam("nomCommun", "Test")
         .request().accept(MediaType.APPLICATION_JSON)
         .post(Entity.entity(contactTest, MediaType.APPLICATION_JSON));
     assertEquals(201, response.getStatus());
     WebTarget resource2 =
-        targets.get("contact").path(getIdentifiantFromLink(response.getHeaderString("Link")));
+        targets.get("contact-domaine1").path(getIdentifiantFromLink(response.getHeaderString("Link")));
     contactsTemps.add(resource2);
-    Response response2 = resource2.path("/habilitations").request().get();
+    Response response2 = resource2.path("/habilitations").request(MediaType.APPLICATION_JSON).get();
     response2.readEntity(Habilitations.class);
     assertEquals(Status.OK.getStatusCode(), response2.getStatus());
   }
 
   @Test
   public void testaddNewHabs() {
-    WebTarget ressource = targets.get("contacts");
+    WebTarget ressource = targets.get("contacts-domaine1");
     Contact contactTest = new Contact();
     contactTest.setNomCommun("Test IT");
-    Response response = ressource.queryParam("domaine", "domaine1").queryParam("nomCommun", "Test")
+    Response response = ressource.queryParam("nomCommun", "Test")
         .request().accept(MediaType.APPLICATION_JSON)
         .post(Entity.entity(contactTest, MediaType.APPLICATION_JSON));
     assertEquals(201, response.getStatus());
     WebTarget resource2 =
-        targets.get("contact").path(getIdentifiantFromLink(response.getHeaderString("Link")));
+        targets.get("contact-domaine1").path(getIdentifiantFromLink(response.getHeaderString("Link")));
     contactsTemps.add(resource2);
     resource2.register(HttpAuthenticationFeature.basicBuilder().nonPreemptive()
         .credentials("applitest", "applitest").build());
@@ -80,18 +80,18 @@ public class TestHabilitationsIt extends InitTests {
 
   @Test
   public void testaddHabs() {
-    WebTarget ressource = targets.get("contact");
+    WebTarget ressource = targets.get("contact-domaine1");
     Response response =
         ressource.path("/testc/habilitations/applitest").queryParam("role", "download").request()
             .accept(MediaType.APPLICATION_JSON).put(Entity.json(""));
     assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
-    Response response2 = ressource.path("/testc/habilitations").request().get();
+    Response response2 = ressource.path("/testc/habilitations").request(MediaType.APPLICATION_JSON).get();
     /* Habilitations habs = */ response2.readEntity(Habilitations.class);
   }
 
   @Test
   public void testdeleteHabs() {
-    WebTarget ressource = targets.get("contact");
+    WebTarget ressource = targets.get("contact-domaine1");
     Response response = ressource.path("/testc/habilitations/applitest").queryParam("role", "role")
         .request().delete();
     assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
@@ -100,21 +100,21 @@ public class TestHabilitationsIt extends InitTests {
         .queryParam("propriete", "prop2").request().delete();
     assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
 
-    Habilitations habs = ressource.path("/testc/habilitations").request().get(Habilitations.class);
+    Habilitations habs = ressource.path("/testc/habilitations").request(MediaType.APPLICATION_JSON).get(Habilitations.class);
     assertEquals(2, habs.toListString().size());
 
   }
 
   @Test
   public void testaddNewHabsWithProperty() {
-    WebTarget ressource = targets.get("contacts");
+    WebTarget ressource = targets.get("contacts-domaine1");
     Contact contactTest = new Contact();
     contactTest.setNomCommun("Test IT");
-    Response response = ressource.queryParam("domaine", "domaine1").queryParam("nomCommun", "Test")
+    Response response = ressource.queryParam("nomCommun", "Test")
         .request().post(Entity.entity(contactTest, MediaType.APPLICATION_JSON));
     assertEquals(201, response.getStatus());
     WebTarget ressource2 =
-        targets.get("contact").path(getIdentifiantFromLink(response.getHeaderString("Link")));
+        targets.get("contact-domaine1").path(getIdentifiantFromLink(response.getHeaderString("Link")));
     contactsTemps.add(ressource2);
     ressource2.register(HttpAuthenticationFeature.basicBuilder().nonPreemptive()
         .credentials("applitest", "applitest").build());
@@ -126,14 +126,14 @@ public class TestHabilitationsIt extends InitTests {
 
   @Test
   public void testaddHabsWithProperty() {
-    WebTarget ressource = targets.get("contacts");
+    WebTarget ressource = targets.get("contacts-domaine1");
     Contact contactTest = new Contact();
     contactTest.setNomCommun("Test IT");
     Response response = ressource.queryParam("domaine", "domaine1").queryParam("nomCommun", "Test")
         .request().post(Entity.entity(contactTest, MediaType.APPLICATION_JSON));
     assertEquals(201, response.getStatus());
     WebTarget ressource2 =
-        targets.get("contact").path(getIdentifiantFromLink(response.getHeaderString("Link")));
+        targets.get("contact-domaine1").path(getIdentifiantFromLink(response.getHeaderString("Link")));
     contactsTemps.add(ressource2);
     ressource2.register(HttpAuthenticationFeature.basicBuilder().nonPreemptive()
         .credentials("applitest", "applitest").build());

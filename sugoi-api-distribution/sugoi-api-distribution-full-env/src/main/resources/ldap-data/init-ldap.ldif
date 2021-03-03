@@ -45,7 +45,6 @@ cn: Utilisateurs_Applitest
 objectclass: groupOfUniqueNames
 uniquemember: uid=Testd,ou=SSM,o=insee,c=fr
 uniquemember: uid=testc,ou=contacts,ou=clients_domaine1,o=insee,c=fr
-uniqueMember: uid=test_password,ou=contacts,ou=clients_domaine1,o=insee,c=fr
 
 # BRANCHE APPLICATIVE WEB SERVICE
 dn: ou=WebServicesLdap,ou=Applications,o=insee,c=fr
@@ -79,15 +78,6 @@ objectclass: top
 objectclass: groupOfUniqueNames
 uniquemember: uid=appli_webservicesldap,ou=Webservicesldap,ou=Applications,o=insee,c=fr
 
-dn: cn=SUGOI_ADMIN,ou=WebServicesLdap_Objets,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
-description: Administrateurs généraux de sugoi
-cn: SUGOI_ADMIN
-objectclass: top
-objectclass: groupOfUniqueNames
-uniquemember: uid=appli_sugoi,ou=Applitest,ou=Applications,o=insee,c=fr
-uniqueMember: uid=test_password,ou=contacts,ou=clients_domaine1,o=insee,c=fr
-
-
 dn: cn=Utilisateurs_contacts_domaine2_WebServicesLdap,ou=WebServicesLdap_Obje
  ts,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
 description: Utilisateur du webservices contact(champ de gestion SERV2010)
@@ -104,29 +94,10 @@ cn: Profil_domaine2_WebServiceLdap
 objectclass: inseeOrganizationalRole
 inseepropriete: ldapUrl$localhost
 inseepropriete: ldapPort$10389
-
-dn: cn=monUserStorage,cn=Profil_domaine2_WebServiceLdap,cn=profil-contact-WebServicesLdap,ou=We
- bServicesLdap_Objets,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
-cn: monUserStorage
-objectclass: inseeOrganizationalRole
 inseepropriete: brancheContact$ou=contacts,ou=clients_domaine2,o=insee,c=fr
 inseepropriete: brancheAdresse$ou=adresses,ou=clients_domaine2,o=insee,c=fr
 inseepropriete: brancheOrganisation$ou=organisations,ou=clients_domaine2,o=in
  see,c=fr
-inseepropriete: groupSourcePattern$ou={appliname}_Objets,ou={appliname},ou=Applications,o=insee,c=fr
-inseepropriete: groupFilterPattern$(cn={group}_{appliname})
-description: domaine2
-
-dn: cn=autreUserStorage,cn=Profil_domaine2_WebServiceLdap,cn=profil-contact-WebServicesLdap,ou=We
- bServicesLdap_Objets,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
-cn: autreUserStorage
-objectclass: inseeOrganizationalRole
-inseepropriete: brancheContact$ou=contacts,ou=clients_domaine2,o=insee,c=fr
-inseepropriete: brancheAdresse$ou=adresses,ou=clients_domaine2,o=insee,c=fr
-inseepropriete: brancheOrganisation$ou=organisations,ou=clients_domaine2,o=in
- see,c=fr
-inseepropriete: groupSourcePattern$ou={appliname}_Objets,ou={appliname},ou=Applications,o=insee,c=fr
-inseepropriete: groupFilterPattern$(cn={group}_{appliname})
 description: domaine2
 
 dn: cn=Profil_domaine1_WebServiceLdap,cn=profil-contact-WebServicesLdap,ou=We
@@ -140,32 +111,45 @@ inseepropriete: brancheAdresse$ou=adresses,ou=clients_domaine1,o=insee,c=fr
 inseepropriete: brancheOrganisation$ou=organisations,ou=clients_domaine1,o=in
  see,c=fr
 inseepropriete: habilitationsPossibles$propriete_role_appli
-inseepropriete: branchesApplicativesPossibles$ou=Applications,o=insee,c=fr
-inseepropriete: groupSourcePattern$ou={appliname}_Objets,ou={appliname},ou=Applications,o=insee,c=fr
-inseepropriete: groupFilterPattern$(cn={group}_{appliname})
+inseepropriete: branchesApplicativesPossibles$applitest
 description: domaine1
+
+dn: cn=Profil_testbatch_WebServiceLdap,cn=profil-contact-WebServicesLdap,ou=We
+ bServicesLdap_Objets,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
+cn: Profil_testbatch_WebServiceLdap
+objectclass: inseeOrganizationalRole
+inseepropriete: ldapUrl$localhost
+inseepropriete: ldapPort$10389
+inseepropriete: brancheContact$ou=contacts,ou=clients_testbatch,o=insee,c=fr
+inseepropriete: brancheAdresse$ou=adresses,ou=clients_testbatch,o=insee,c=fr
+inseepropriete: brancheOrganisation$ou=organisations,ou=clients_testbatch,o=in
+ see,c=fr
+inseepropriete: habilitationsPossibles$propriete_role_appli
+inseepropriete: branchesApplicativesPossibles$applitest
+description: testbatch
+
+dn: cn=Profil_nouniqueid_WebServiceLdap,cn=profil-contact-WebServicesLdap,ou=We
+ bServicesLdap_Objets,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
+cn: Profil_nouniqueid_WebServiceLdap
+objectclass: inseeOrganizationalRole
+inseepropriete: ldapUrl$localhost
+inseepropriete: ldapPort$10389
+inseepropriete: brancheContact$ou=contacts,ou=clients_nouniqueid,o=insee,c=fr
+inseepropriete: brancheAdresse$ou=adresses,ou=clients_nouniqueid,o=insee,c=fr
+inseepropriete: brancheOrganisation$ou=organisations,ou=clients_nouniqueid,o=in
+ see,c=fr
+inseepropriete: habilitationsPossibles$propriete_role_appli
+inseepropriete: branchesApplicativesPossibles$applitest
+inseepropriete: idglobalunicity$false
+description: nouniqueid
 
 dn: cn=Utilisateurs_contacts_domaine1_WebServicesLdap,ou=WebServicesLdap_Obje
  ts,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
 description: Utilisateur du webservices contact
 cn: Utilisateurs_contacts_domaine1_WebServicesLdap
 objectclass: groupOfUniqueNames
-uniqueMember: uid=consultant_domaine_1,ou=Applitest,ou=Applications,o=insee,c=fr
-uniqueMember: uid=test_password,ou=contacts,ou=clients_domaine1,o=insee,c=fr
+uniqueMember: uid=appli_applitest,ou=Applitest,ou=Applications,o=insee,c=fr
 
-dn: cn=Admin_WebServicesLdap,ou=WebServicesLdap_Obje
- ts,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
-description: Utilisateur du webservices contact
-cn: Admin_WebServicesLdap
-objectclass: groupOfUniqueNames
-uniqueMember: uid=admin,ou=Applitest,ou=Applications,o=insee,c=fr
-
-dn: cn=Gestionnaires_contacts_domaine2_WebServicesLdap,ou=WebServicesLdap_Obje
- ts,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
-description: Utilisateur du webservices contact
-cn: Gestionnaires_contacts_domaine2_WebServicesLdap
-objectclass: groupOfUniqueNames
-uniqueMember: uid=gestionnaire_domaine_2,ou=Applitest,ou=Applications,o=insee,c=fr
 
 # DOMAINE DE GESTION 1
 dn: ou=clients_domaine1,o=insee,c=fr
@@ -209,9 +193,19 @@ inseegroupedefaut: prop_role_applitest
 inseegroupedefaut: role2_applitest
 inseegroupedefaut: prop1_TestIgnoreCase_applitest
 inseegroupedefaut: Prop2_TestIgnoreCase_applitest
-inseeRoleApplicatif: toto
-inseeRoleApplicatif: tata
-memberOf: cn=Utilisateurs_Applitest,ou=Applitest_Objets,ou=Applitest,ou=Applications,o=insee,c=fr
+pwdchangedtime: 20200922005942Z
+
+dn: uid=testMultimail,ou=contacts,ou=clients_domaine1,o=insee,c=fr
+objectClass: top
+objectClass: inseeCompte
+objectClass: inseeContact
+objectClass: inseeAttributsAuthentification
+objectClass: inseeAttributsHabilitation
+objectClass: inseeAttributsCommunication
+mail: test@test.fr;test2@test.fr;clement.dufaure@insee.fr
+uid: testMultimail
+telephoneNumber: 1209883940
+cn: Testy Test
 
 dn: uid=testo,ou=organisations,ou=clients_domaine1,o=insee,c=fr
 objectClass: top
@@ -258,7 +252,6 @@ objectclass: organizationalUnit
 ou: adresses
 description: domaine de gestion des adresses postales de réception des fichiers par les
 
-
 # DOMAINE DE GESTION SSM
 dn: cn=Profil_SSM_WebServiceLdap,cn=profil-contact-WebServicesLdap,ou=We
  bServicesLdap_Objets,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
@@ -267,10 +260,8 @@ objectclass: inseeOrganizationalRole
 inseepropriete: ldapUrl$localhost
 inseepropriete: ldapPort$10389
 inseepropriete: brancheContact$ou=SSM,o=insee,c=fr
-inseepropriete: objectclasscontact$top,person,organizationalPerson,inetOrgPerson,inseeAuthenticatedUser
+inseepropriete: top,person,organizationalPerson,inseeAuthenticatedUser,inetOrgPerson
 inseepropriete: branchesApplicativesPossibles$applitest
-inseepropriete: groupSourcePattern$ou={appliname}_Objets,ou={appliname},ou=Applications,o=insee,c=fr
-inseepropriete: groupFilterPattern$(cn={group}_{appliname})
 description: SSM
 
 dn: ou=SSM,o=insee,c=fr
@@ -291,87 +282,136 @@ objectClass: inseeAuthenticatedUser
 cn: Alfred Dupont
 sn: Dupont
 givenName: Alfred
-mail: alfred.dupont@gouv.test
-description: utilisateur de test ssm
+mail: alfred.dupont@monssm.com
+description: agent de test
+o: Nom de mon SSM
 
-dn: uid=Testd,ou=SSM,o=insee,c=fr
-uid: Testd
-userPassword: {SHA}c3q3RSeNwMY7E09Ve9oBHw+MVXg3=
+# DOMAINE DE GESTION INSEE
+dn: cn=Profil_INSEE_WebServiceLdap,cn=profil-contact-WebServicesLdap,ou=We
+ bServicesLdap_Objets,ou=WebServicesLdap,ou=Applications,o=insee,c=fr
+cn: Profil_INSEE_WebServiceLdap
+objectclass: inseeOrganizationalRole
+inseepropriete: ldapUrl$localhost
+inseepropriete: ldapPort$10389
+inseepropriete: brancheContact$ou=INSEE,o=insee,c=fr
+inseepropriete: objectclasscontact$top,person,organizationalPerson,inetOrgPerson,inseePerson
+inseepropriete: branchesApplicativesPossibles$applitest
+description: INSEE
+
+dn: ou=INSEE,o=insee,c=fr
+description: domaine de gestion des INSEE
+objectclass: top
+objectclass: organizationalUnit
+ou: INSEE
+
+dn: uid=AGENTINSEE,ou=INSEE,o=insee,c=fr
+uid: AGENTINSEE
+userPassword: {SHA}c3q3RSeNwMY7E09Ve9oBHw+MVXg=
+inseeGroupeDefaut: role_applicatif
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-objectClass: inseeAuthenticatedUser
-cn: Dodo Dupont 2
-sn: Dupont 2
-givenName: Alfred2
-mail: alfred.dupont@gouv.test2
-description: utilisateur de test ssm
-inseeGroupeDefaut: role_applicatif
-inseegroupedefaut: prop_role_applitest
-inseegroupedefaut: role2_applitest
-inseegroupedefaut: prop1_TestIgnoreCase_applitest
-inseegroupedefaut: Prop2_TestIgnoreCase_applitest
+objectClass: inseePerson
+cn: Alfred Dupont
+sn: Dupont
+givenName: Alfred
+mail: alfred.dupont@insee.fr
+description: agent de test
+inseeTimbre: D280
+inseeOrganisme: Nom de mon SSM
 
-
-
-dn: uid=admin,ou=Applitest,ou=Applications,o=insee,c=fr
+# DOMAINE DE TESTBATCH
+dn: ou=clients_testbatch,o=insee,c=fr
+description: domaine de gestion pour le test du batch
 objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-objectclass: inseeApplication
-cn: admin
-sn: admin
-givenname: admin
-uid: admin
-userpassword: admin
+objectclass: organizationalUnit
+ou: clients_testbatch
 
-
-dn: uid=consultant_domaine_1,ou=Applitest,ou=Applications,o=insee,c=fr
+dn: ou=contacts,ou=clients_testbatch,o=insee,c=fr
+description: contact du domaine testbatch
 objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-objectclass: inseeApplication
-cn: consultant_domaine_1
-sn: consultant_domaine_1
-givenname: consultant_domaine_1
-uid: consultant_domaine_1
-userpassword: consultant
+objectclass: organizationalUnit
+ou: contacts
 
-
-dn: uid=gestionnaire_domaine_2,ou=Applitest,ou=Applications,o=insee,c=fr
+dn: ou=organisations,ou=clients_testbatch,o=insee,c=fr
+description: organisations du domaine testbatch
 objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-objectclass: inseeApplication
-cn: gestionnaire_domaine_2
-sn: gestionnaire_domaine_2
-givenname: gestionnaire_domaine_2
-uid: gestionnaire_domaine_2
-userpassword: gestionnaire
+objectclass: organizationalUnit
+ou: organisations
 
-dn: uid=appli_sugoi,ou=Applitest,ou=Applications,o=insee,c=fr
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-objectclass: inseeApplication
-cn: appli_sugoi
-sn: appli_sugoi
-givenname: appli_sugoi
-uid: appli_sugoi
-userpassword: sugoi
+dn: uid=sloopy1,ou=contacts,ou=clients_testbatch,o=insee,c=fr
+objectClass: top
+objectClass: inseeCompte
+objectClass: inseeContact
+objectClass: inseeAttributsAuthentification
+objectClass: inseeAttributsHabilitation
+objectClass: inseeAttributsCommunication
+mail: sloopy1@test.fr
+uid: sloopy1
+inseeAdressePostaleDN: l=testa,ou=adresses,ou=clients_testbatch,o=insee,c=fr
+telephoneNumber: 1209883940
+cn: Sloopy
 
-dn: uid=test_password,ou=contacts,ou=clients_domaine1,o=insee,c=fr
+dn: uid=sloopy2,ou=contacts,ou=clients_testbatch,o=insee,c=fr
+objectClass: top
+objectClass: inseeCompte
+objectClass: inseeContact
+objectClass: inseeAttributsAuthentification
+objectClass: inseeAttributsHabilitation
+objectClass: inseeAttributsCommunication
+mail: sloopy2@test.fr
+uid: sloopy2
+inseeAdressePostaleDN: l=testa,ou=adresses,ou=clients_testbatch,o=insee,c=fr
+telephoneNumber: 1209883940
+cn: Sloopy
+
+dn: uid=orga1,ou=organisations,ou=clients_testbatch,o=insee,c=fr
+objectClass: top
+objectClass: inseeOrganisation
+uid: orga1
+description: Insee
+
+dn: uid=orga2,ou=organisations,ou=clients_testbatch,o=insee,c=fr
+objectClass: top
+objectClass: inseeOrganisation
+uid: orga2
+description: Insee
+
+# DOMAINE DE NOUNIQUEID
+dn: ou=clients_nouniqueid,o=insee,c=fr
+description: domaine de gestion ne necessitant pas un id unique
 objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-objectclass: inseeApplication
-cn: test_password
-sn: test_password
-givenname: test_password
-uid: test_password
+objectclass: organizationalUnit
+ou: clients_nouniqueid
+
+dn: ou=contacts,ou=clients_nouniqueid,o=insee,c=fr
+description: contact du domaine nouniqueid
+objectclass: top
+objectclass: organizationalUnit
+ou: contacts
+
+dn: ou=organisations,ou=clients_nouniqueid,o=insee,c=fr
+description: organisations du domaine nouniqueid
+objectclass: top
+objectclass: organizationalUnit
+ou: organisations
+
+dn: uid=sloopyunique,ou=contacts,ou=clients_nouniqueid,o=insee,c=fr
+objectClass: top
+objectClass: inseeCompte
+objectClass: inseeContact
+objectClass: inseeAttributsAuthentification
+objectClass: inseeAttributsHabilitation
+objectClass: inseeAttributsCommunication
+mail: sloopyunique@test.fr
+uid: sloopyunique
+inseeAdressePostaleDN: l=testa,ou=adresses,ou=clients_nouniqueid,o=insee,c=fr
+telephoneNumber: 1209883940
+cn: Sloopy
+
+dn: uid=orgaunique,ou=organisations,ou=clients_nouniqueid,o=insee,c=fr
+objectClass: top
+objectClass: inseeOrganisation
+uid: orgaunique
+description: Insee

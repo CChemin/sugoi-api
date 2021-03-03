@@ -33,7 +33,7 @@ public class InitTests {
 
     ClientConfig confDuClient = new ClientConfig();
     confDuClient.register(HttpAuthenticationFeature.basicBuilder()
-        .credentials("webservicesldap", "webservices").build());
+        .credentials("appli_applitest", "applitest").build());
     confDuClient.register(getSpecialLoggingFeature());
     client =
         ClientBuilder.newBuilder().sslContext(getUntrustContext()).withConfig(confDuClient).build();
@@ -71,12 +71,19 @@ public class InitTests {
 
   private static void prepareTargets(Client client) {
     String server =
-        "https://localhost:" + LdapServiceTestServer.TOMCAT_PORT_HTTPS + "/api/annuaire";
+        "http://localhost:" + LdapServiceTestServer.TOMCAT_PORT + "/tomcat1/v1";
     targets = new HashMap<String, WebTarget>();
+    targets.put("contact-domaine1", client.target(server + "/domaine1/contact"));
+    targets.put("contact-domaine2", client.target(server + "/domaine2/contact"));
+    targets.put("contacts-domaine2", client.target(server + "/domaine2/contacts"));
+    targets.put("contacts-domaine1", client.target(server + "/domaine1/contacts"));
+    targets.put("contacts-SSM", client.target(server + "/SSM/contacts"));
     targets.put("contacts", client.target(server + "/contacts"));
     targets.put("contact", client.target(server + "/contact"));
     targets.put("organisation", client.target(server + "/organisation"));
+    targets.put("organisation-domaine2", client.target(server + "/domaine2/organisation"));
     targets.put("organisations", client.target(server + "/organisations"));
+    targets.put("organisations-domaine2", client.target(server + "/domaine2/organisations"));
     targets.put("/", client.target(server + "/"));
   }
 
