@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>fr.insee.sugoi</groupId>
 		<artifactId>sugoi-api-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<groupId>fr.insee.sugoi</groupId>
 	<artifactId>sugoi-api-event-log</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>sugoi-api-event-log</name>
 	<description>event listener which produce log for sugoi</description>
 
