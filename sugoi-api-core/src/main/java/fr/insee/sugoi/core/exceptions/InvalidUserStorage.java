@@ -11,22 +11,23 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package fr.insee.sugoi.core.service;
+package fr.insee.sugoi.core.exceptions;
 
-import fr.insee.sugoi.core.model.PageResult;
-import fr.insee.sugoi.core.model.PageableResult;
-import fr.insee.sugoi.model.Application;
+public class InvalidUserStorage extends RuntimeException {
+  /** */
+  private static final long serialVersionUID = 1L;
 
-public interface ApplicationService {
+  private String message;
 
-  Application create(String realm, Application application);
+  public InvalidUserStorage(String message) {
+    this.message = message;
+  }
 
-  void update(String realm, Application application);
+  public String getMessage() {
+    return this.message;
+  }
 
-  void delete(String realm, String id);
-
-  Application findById(String realm, String id);
-
-  PageResult<Application> findByProperties(
-      String realm, Application applicationFilter, PageableResult pageableResult);
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }

@@ -13,6 +13,7 @@
 */
 package fr.insee.sugoi.services.controller;
 
+import fr.insee.sugoi.core.exceptions.EntityNotFoundException;
 import fr.insee.sugoi.core.model.PageResult;
 import fr.insee.sugoi.core.model.PageableResult;
 import fr.insee.sugoi.core.model.SearchType;
@@ -257,7 +258,10 @@ public class UserController {
           @PathVariable(name = "storage", required = false)
           String storage,
       @Parameter(description = "User to create", required = true) @RequestBody User user) {
-    if (userService.findById(realm, storage, user.getUsername()) == null) {
+    try {
+      userService.findById(realm, storage, user.getUsername());
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    } catch (EntityNotFoundException e) {
       userService.create(realm, storage, user);
       URI location =
           ServletUriComponentsBuilder.fromCurrentRequest()
@@ -266,40 +270,7 @@ public class UserController {
               .toUri();
       return ResponseEntity.created(location)
           .body(userService.findById(realm, storage, user.getUsername()));
-    } else {
-      return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
-  }
-
-  @PostMapping(
-      value = {"/realms/{realm}/users"},
-      consumes = {MediaType.APPLICATION_JSON_VALUE},
-      produces = {MediaType.APPLICATION_JSON_VALUE})
-  @Operation(summary = "Create user")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "User created",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = User.class))
-            }),
-        @ApiResponse(
-            responseCode = "409",
-            description = "User already exist",
-            content = {@Content(mediaType = "application/json")})
-      })
-  @PreAuthorize("@NewAuthorizeMethodDecider.isWriter(#realm,#storage)")
-  public ResponseEntity<?> createUsers(
-      @Parameter(
-              description = "Name of the realm where the operation will be made",
-              required = true)
-          @PathVariable("realm")
-          String realm,
-      @Parameter(description = "User to create", required = true) @RequestBody User user) {
-    return createUsers(realm, null, user);
   }
 
   @PutMapping(
@@ -345,7 +316,6 @@ public class UserController {
     if (!user.getUsername().equals(id)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-
     if (userService.findById(realm, storage, id) != null) {
       userService.update(realm, storage, user);
       URI location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
@@ -391,8 +361,11 @@ public class UserController {
       @Parameter(description = "User's id to update", required = true) @PathVariable("id")
           String id,
       @Parameter(description = "User to update", required = true) @RequestBody User user) {
-
-    return updateUsers(realm, null, id, user);
+    if (!user.getUsername().equals(id)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    User foundUser = userService.findById(realm, null, id);
+    return updateUsers(realm, (String) foundUser.getMetadatas().get("userStorage"), id, user);
   }
 
   @DeleteMapping(
@@ -466,7 +439,8 @@ public class UserController {
       @Parameter(description = "User's id to delete", required = true) @PathVariable("id")
           String id) {
 
-    return deleteUsers(realm, null, id);
+    User foundUser = userService.findById(realm, null, id);
+    return deleteUsers(realm, (String) foundUser.getMetadatas().get("userStorage"), id);
   }
 
   @GetMapping(

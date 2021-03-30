@@ -13,6 +13,7 @@
 */
 package fr.insee.sugoi.services.controller;
 
+import fr.insee.sugoi.core.exceptions.EntityNotFoundException;
 import fr.insee.sugoi.core.model.PageResult;
 import fr.insee.sugoi.core.model.PageableResult;
 import fr.insee.sugoi.core.model.SearchType;
@@ -192,53 +193,20 @@ public class OrganizationController {
           String storage,
       @Parameter(description = "Organization to create", required = false) @RequestBody
           Organization organization) {
-
-    if (organizationService.findById(realm, storage, organization.getIdentifiant()) == null) {
+    try {
+      organizationService.findById(realm, storage, organization.getIdentifiant());
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    } catch (EntityNotFoundException e) {
+      // TODO: handle exception
       organizationService.create(realm, storage, organization);
-
       URI location =
           ServletUriComponentsBuilder.fromCurrentRequest()
               .path("/" + organization.getIdentifiant())
               .build()
               .toUri();
-
       return ResponseEntity.created(location)
           .body(organizationService.findById(realm, storage, organization.getIdentifiant()));
-    } else {
-      return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
-  }
-
-  @PostMapping(
-      value = {"/realms/{realm}/organizations"},
-      consumes = {MediaType.APPLICATION_JSON_VALUE},
-      produces = {MediaType.APPLICATION_JSON_VALUE})
-  @Operation(summary = "Create a new organization")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Organization created",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = Organization.class))
-            }),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Organization already exist",
-            content = {@Content(mediaType = "application/json")})
-      })
-  @PreAuthorize("@NewAuthorizeMethodDecider.isWriter(#realm,#storage)")
-  public ResponseEntity<Organization> createOrganizations(
-      @Parameter(
-              description = "Name of the realm where the operation will be made",
-              required = true)
-          @PathVariable("realm")
-          String realm,
-      @Parameter(description = "Organization to create", required = false) @RequestBody
-          Organization organization) {
-    return createOrganizations(realm, null, organization);
   }
 
   @PutMapping(
@@ -333,7 +301,12 @@ public class OrganizationController {
           String id,
       @Parameter(description = "Organization to update", required = false) @RequestBody
           Organization organization) {
-    return updateOrganizations(realm, null, id, organization);
+    if (!organization.getIdentifiant().equals(id)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    Organization org = organizationService.findById(realm, null, id);
+    return updateOrganizations(
+        realm, (String) org.getMetadatas().get("userStorage"), id, organization);
   }
 
   @DeleteMapping(
@@ -398,7 +371,9 @@ public class OrganizationController {
           String realm,
       @Parameter(description = "Organization's id to delete", required = false) @PathVariable("id")
           String id) {
-    return deleteOrganizations(realm, null, id);
+
+    Organization org = organizationService.findById(realm, null, id);
+    return deleteOrganizations(realm, (String) org.getMetadatas().get("userStorage"), id);
   }
 
   @GetMapping(

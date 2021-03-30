@@ -15,13 +15,20 @@ package fr.insee.sugoi.core.service.impl;
 
 import fr.insee.sugoi.core.event.model.SugoiEventTypeEnum;
 import fr.insee.sugoi.core.event.publisher.SugoiEventPublisher;
+import fr.insee.sugoi.core.exceptions.EntityNotFoundException;
 import fr.insee.sugoi.core.model.PageResult;
 import fr.insee.sugoi.core.model.PageableResult;
 import fr.insee.sugoi.core.model.SearchType;
+import fr.insee.sugoi.core.realm.RealmProvider;
 import fr.insee.sugoi.core.service.UserService;
+import fr.insee.sugoi.core.store.ReaderStore;
 import fr.insee.sugoi.core.store.StoreProvider;
+import fr.insee.sugoi.model.Realm;
 import fr.insee.sugoi.model.User;
+import fr.insee.sugoi.model.UserStorage;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +37,11 @@ public class UserServiceImpl implements UserService {
 
   @Autowired private StoreProvider storeProvider;
 
+  @Autowired private RealmProvider realmProvider;
+
   @Autowired private SugoiEventPublisher sugoiEventPublisher;
+
+  protected static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
   @Override
   public User create(String realm, String storage, User user) {
@@ -55,19 +66,40 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User findById(String realmName, String storage, String id) {
-    if (id == null) {
-      id = "";
+    if (id != null) {
+      sugoiEventPublisher.publishCustomEvent(
+          realmName,
+          storage,
+          SugoiEventTypeEnum.FIND_USER_BY_ID,
+          Map.ofEntries(Map.entry("userId", id)));
     }
-    sugoiEventPublisher.publishCustomEvent(
-        realmName,
-        storage,
-        SugoiEventTypeEnum.FIND_USER_BY_ID,
-        Map.ofEntries(Map.entry("userId", id)));
-    try {
-      return storeProvider.getReaderStore(realmName, storage).getUser(id);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    if (storage != null) {
+      try {
+        User user = storeProvider.getReaderStore(realmName, storage).getUser(id);
+        user.addMetadatas("realm", realmName.toLowerCase());
+        user.addMetadatas("userStorage", storage.toLowerCase());
+        return user;
+      } catch (Exception e) {
+        throw new EntityNotFoundException(
+            "User not found in realm " + realmName + " and userStorage " + storage);
+      }
+    } else {
+      Realm r = realmProvider.load(realmName);
+      for (UserStorage us : r.getUserStorages()) {
+        try {
+          User user = storeProvider.getReaderStore(realmName, us.getName()).getUser(id);
+          if (user != null) {
+            user.addMetadatas("realm", realmName);
+            user.addMetadatas("userStorage", us.getName());
+            return user;
+          }
+        } catch (Exception e) {
+          logger.debug(
+              "User " + id + "not in realm " + realmName + " and userstorage " + us.getName());
+        }
+      }
     }
+    throw new EntityNotFoundException("User not found in realm " + realmName);
   }
 
   @Override
@@ -86,13 +118,48 @@ public class UserServiceImpl implements UserService {
             Map.entry("userProperties", userProperties),
             Map.entry("pageable", pageable),
             Map.entry("typeRecherche", typeRecherche)));
+    PageResult<User> result = new PageResult<>();
+    result.setPageSize(pageable.getSize());
     try {
-      return storeProvider
-          .getReaderStore(realm, storage)
-          .searchUsers(userProperties, pageable, typeRecherche.name());
+      if (storage != null) {
+        result =
+            storeProvider
+                .getReaderStore(realm, storage)
+                .searchUsers(userProperties, pageable, typeRecherche.name());
+        result
+            .getResults()
+            .forEach(
+                user -> {
+                  user.addMetadatas("realm", realm);
+                  user.addMetadatas("userStorage", storage);
+                });
+      } else {
+        Realm r = realmProvider.load(realm);
+        for (UserStorage us : r.getUserStorages()) {
+          ReaderStore readerStore =
+              storeProvider.getStoreForUserStorage(realm, us.getName()).getReader();
+          PageResult<User> temResult =
+              readerStore.searchUsers(userProperties, pageable, typeRecherche.name());
+          temResult
+              .getResults()
+              .forEach(
+                  user -> {
+                    user.addMetadatas("realm", realm);
+                    user.addMetadatas("userStorage", us.getName());
+                  });
+          result.getResults().addAll(temResult.getResults());
+          result.setTotalElements(result.getResults().size());
+          if (result.getTotalElements() >= result.getPageSize()) {
+            return result;
+          }
+          pageable.setSize(pageable.getSize() - result.getTotalElements());
+        }
+      }
+
     } catch (Exception e) {
       throw new RuntimeException("Erreur lors de la récupération des utilisateurs", e);
     }
+    return result;
   }
 
   @Override
