@@ -4,8 +4,7 @@
 [![Actions Status](https://github.com/inseeFrLab/sugoi-api/workflows/Sugoi%20API%20integration%20test/badge.svg)](https://github.com/inseeFrLab/sugoi-api/actions)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/inseefrlab/sugoi-api)
 
-
-> Sugoi provides an API to manage users with multi tenancy in mind.
+ Sugoi provides an API to manage users with multi tenancy in mind.
 
 - [Sugoi: User management Api](#sugoi-user-management-api)
 - [Installation](#installation)
@@ -13,30 +12,29 @@
 - [Contributing](#contributing)
 - [License](#license)
 
-
-Sugoi is an API to manage users, organizations, applications. Each of these objects is managed in a realm, all realm are isolated.
+Sugoi is an API to manage users, organizations and applications. These objects are scoped to realms to isolate object with separated purposes (employees, clients, contacts...).
 
 [View more](docs/concepts.md)
 
-A react frontend for this API can be found here : https://github.com/InseeFrLab/sugoi-ui.
+A react frontend for this API can be found here : <https://github.com/InseeFrLab/sugoi-ui>.
 
-A Keycloak storage extension is here : https://github.com/InseeFrLab/keycloak-http-storage-provider (*Work in Progress*)
+A Keycloak storage extension is here : <https://github.com/InseeFrLab/keycloak-http-storage-provider> (*Work in Progress*)
 
 ## Installation
 
 Download and extract release zip, modify [configuration file](docs/configuration.md) as needed and launch :
 
-```
-java -jar sugoi-${version}.jar
+```bash
+java -jar -Dspring.profiles.active=local sugoi-api.jar
 ```
 
 Some other ways could be found in [docs/install.md](docs/install.md)
+
 ## Configuration
 
 All configuration is done through an `application.properties` file a la spring-boot.
 
 [Configuration.md](docs/configuration.md) for details.
-
 
 ## Contributing
 
@@ -49,4 +47,4 @@ Please make sure to update or create tests as appropriate.
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)

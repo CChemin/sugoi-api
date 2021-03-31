@@ -1,10 +1,10 @@
-## Configuration 
+# Configuration
 
-All properties can be given by different ways. By default, spring Boot loads properties from application.properties. You can also use system properties for example ```java -jar app.jar -DNameofpropertie=valueOfProperty```. Command line application arguments also work : ``` -Dspring-boot.run.arguments="--nameofpropertie=valueOfProperty"```. You can also use OS environment variables.
+All properties can be given by different ways. By default, spring Boot loads properties from application.properties. You can also use system properties for example ```java -jar app.jar -DNameofpropertie=valueOfProperty```. Command line application arguments also work : ```batch -Dspring-boot.run.arguments="--nameofpropertie=valueOfProperty"```. You can also use OS environment variables.
 
 Sugoi-api is a springboot app working with extension. Each extension is activated by a property.
 
-## Available Properties:
+## Available Properties
 
 ### Realm provider configuration
 
@@ -14,13 +14,14 @@ Realm can be load from different sources.
 | ------------------------------------------ | :-----------------------------------------------------------------------------------------------------------------------------------------------------: | ------------: | ----------: |
 | fr.insee.sugoi.realm.config.type           |                                                       RealmProvider type (could be ldap or file)                                                        |          file |        file |
 | fr.insee.sugoi.realm.config.local.path     |                              Use only if config type is file. Path to a file containing an array of realms in json format                               |               | realms.json |
-| fr.insee.sugoi.config.ldap.profils.url     |                              Use only if config type is ldap. Ldap host and port where the realm configurations are stored                              |               |  myLdap.url |
+| fr.insee.sugoi.config.ldap.profils.url     |                              Use only if config type is ldap. Ldap host and port where the realm configurations are stored                              |               |  my-ldap.url |
 | fr.insee.sugoi.config.ldap.profils.port    |                              Use only if config type is ldap. Ldap host and port where the realm configurations are stored                              |               |         389 |
 | fr.insee.sugoi.config.ldap.profils.branche |                                      Use only if config type is ldap. Ldap subtree where configurations are stored                                      |               |             |
 | fr.insee.sugoi.config.ldap.profils.pattern | Use only if config type is ldap. String pattern to find realms ('{realm}' is replaced with realm's name). cn={realm} wil search realm config for realm1 |               |             |
 
 ### Reader writer configuration
-For each realm we have the possibility to configure a default reader and a default writer. For the moment it's possible to use ldap, file, and jms as writerStore and only ldap and file as reader. 
+
+For each realm we have the possibility to configure a default reader and a default writer. For the moment it's possible to use ldap, file, and jms as writerStore and only ldap and file as reader.
 
 | Properties                                      |                                      Description                                      | Default value |                                         example |
 | ----------------------------------------------- | :-----------------------------------------------------------------------------------: | ------------: | ----------------------------------------------: |
@@ -38,8 +39,8 @@ For each realm we have the possibility to configure a default reader and a defau
 | fr.insee.sugoi.ldap.default.password            | Use only if defaultWriter is ldap. Default password to establish connection with ldap |               |                                           admin |
 | fr.insee.sugoi.ldap.default.port                |   Use only if defaultWriter is ldap. Default port to establish connection with ldap   |               |                                           10389 |
 
-
 ### SpringDoc configuration
+
 Sugoi-api implements springdoc with full customization allowed
 
 | Properties                                        | Description | Default value | example |
@@ -54,8 +55,8 @@ Sugoi-api implements springdoc with full customization allowed
 | fr.insee.sugoi.springdoc.contact.email            |             |               |         |
 | springdoc.swagger-ui.path                         |             |               |         |
 
-
 ### Security configuration
+
 Sugoi-api implements spring security with full customization allowed
 
 | Properties                                                 | Description | Default value | example |
@@ -77,10 +78,13 @@ Sugoi-api implements spring security with full customization allowed
 | fr.insee.sugoi.api.regexp.role.reader                      |             |               |         |
 | fr.insee.sugoi.api.regexp.role.writer                      |             |               |         |
 | fr.insee.sugoi.api.regexp.role.admin                       |             |               |         |
+| fr.insee.sugoi.api.regexp.role.app.manager                 |             |               |         |
+| fr.insee.sugoi.api.regexp.role.password.manager            |             |               |         |
 | fr.insee.sugoi.api.enable.preauthorize                     |             |               |         |
 
 ### WebHooks configuration
-Sugoi-api allowed 
+
+Sugoi-api allowed
 
 | Properties                                            | Description | Default value | example |
 | ----------------------------------------------------- | :---------: | ------------: | ------: |
@@ -95,6 +99,7 @@ Sugoi-api allowed
 | sugoi.api.event.webhook.{name}.default.init.template  |             |               |         |
 
 ### Spring actuator configuration
+
 Sugoi-api implements spring actuator documentation available here : [link](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html)
 
 | Properties                                   | Description | Default value | example |
@@ -111,8 +116,8 @@ Sugoi-api implements spring actuator documentation available here : [link](https
 | management.endpoint.prometheus.enabled       |             |               |         |
 | management.metrics.export.prometheus.enabled |             |               |         |
 
-
 ### Other info configuration
+
 You can add all other spring properties for example :
 
 | Properties                                 |            Description            | Default value | example |
@@ -121,5 +126,3 @@ You can add all other spring properties for example :
 | logging.level.root                         |                                   |               |         |
 | logging.level.fr.insee.sugoi               |                                   |               |         |
 | logging.level.org.springframework.security |                                   |               |         |
-
-
