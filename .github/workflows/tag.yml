@@ -96,9 +96,9 @@ jobs:
           git config --global user.name "Insee - Domaine Outils Transverses"
           git config --global user.email "dg75-dsi-domaine-outils-transverses@insee.fr"
           git checkout main
-          git checkout -b prepare-version-$new_version
           old_version=${{ needs.build.outputs.version }}
           new_version=$(echo $old_version | cut -d. -f1).$(($(echo $old_version | cut -d. -f2) + 1)).0
+          git checkout -b prepare-version-$new_version
           mvn -B versions:set -DnewVersion=$new_version-SNAPSHOT -DgenerateBackupPoms=false
           git add .
           git commit -sm"Prepare new version"
